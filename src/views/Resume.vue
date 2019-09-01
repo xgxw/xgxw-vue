@@ -8,7 +8,7 @@
 </template>
 
 <script lang='ts'>
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { default as PaperLayout } from "@/layout/Paper.vue";
 import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
