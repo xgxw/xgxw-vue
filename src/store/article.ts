@@ -1,9 +1,8 @@
 import { client } from '@/api';
 import { UnkownRequestError, instanceOfRequestError } from '@/constants/error';
 
-export interface Article {
+export interface File {
   fid: string,
-  name: string,
   content: string,
 }
 
@@ -11,7 +10,7 @@ interface State {
   fetching: boolean,
   uploading: boolean,
   changedSinceLastSave: boolean,
-  data: Article,
+  data: File,
 };
 
 const state: State = {
@@ -20,7 +19,6 @@ const state: State = {
   changedSinceLastSave: true,
   data: {
     fid: "",
-    name: "",
     content: "",
   },
 }
@@ -45,12 +43,11 @@ const actions = {
   async fetchContent({ commit }, fid: string): Promise<any> {
     commit("fetchingContent", fid)
     return new Promise<any>((resolved, reject) => {
-      let article: Article;
+      let file: File;
       client.fetchFile({ fid: fid }).then(res => {
-        article = {
-          fid: res.data.fid,
-          name: res.data.name,
-          content: res.data.content,
+        file = {
+          fid: fid,
+          content: res.request.response,
         }
         resolved()
       }).catch(e => {
@@ -60,7 +57,7 @@ const actions = {
         console.log("请求服务器发生错误: ", e)
         reject(UnkownRequestError)
       }).finally(() => {
-        commit("fetchingContentFinish", article)
+        commit("fetchingContentFinish", file)
       })
     })
   },
@@ -68,30 +65,22 @@ const actions = {
   async fetchContentLocal({ commit }, fid: string): Promise<any> {
     commit("fetchingContent", fid)
     return new Promise<any>((resolved, reject) => {
-      let article: Article = {
-        fid: fid
+      let file: File = {
+        fid: fid,
+        content: ""
       };
       let articleStr = window.localStorage.getItem(fid);
       if (articleStr) {
-        article = JSON.parse(<string>articleStr);
-        if (!article || !article.fid || article.fid != fid) {
-          article = {
-            fid: fid
+        file = JSON.parse(<string>articleStr);
+        if (!file || !file.fid || file.fid != fid) {
+          file = {
+            fid: fid,
+            content: ""
           };
         }
       }
       resolved()
-      commit("fetchingContentFinish", article)
-    })
-  },
-  // changeContent 更改vuex Content 内容. Editor.vue change事件触发
-  async changeContent({ commit, state }, content: string): Promise<any> {
-    return new Promise<any>((resolved, reject) => {
-      if (state.data && (state.data.content == content)) {
-        resolved()
-      }
-      commit("changeContent", content)
-      resolved()
+      commit("fetchingContentFinish", file)
     })
   },
   // uploadContentLocal 保存文件.
@@ -111,23 +100,17 @@ const mutations = {
     state.data.fid = fid
     console.log("fetchingContent: ", fid)
   },
-  fetchingContentFinish(state: State, article: Article) {
+  fetchingContentFinish(state: State, file: File) {
     state.fetching = false
     state.changedSinceLastSave = false;
-    if (!article) {
-      article = {
+    if (!file) {
+      file = {
         fid: "",
-        name: "",
         content: ""
       }
     }
-    state.data = article
-    console.log("fetchingContentFinish: ", article)
-  },
-  changeContent(state: State, content: string) {
-    state.data.content = content
-    state.changedSinceLastSave = true;
-    console.log("changeContent: ", content)
+    state.data = file
+    console.log("fetchingContentFinish: ", file)
   },
   uploadContent(state: State, content: string) {
     state.uploading = true

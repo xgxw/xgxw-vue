@@ -9,7 +9,7 @@ export class HTTPClient {
     constructor(requsetConfig: Axios.AxiosRequestConfig) {
         this.axios = Axios.default.create({
             timeout: 0,
-            withCredentials: true, // 允许跨域 cookie
+            // withCredentials: true, // 允许跨域 cookie
             headers: {
                 // 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
             },
@@ -27,11 +27,25 @@ export class HTTPClient {
         })
     }
 
-    async fetchFile(r: FetchFileRequset): Promise<FetchFileResponse> {
+    async fetchSignURL(r: FetchURLRequset): Promise<FetchURLResponse> {
         return this.request({
-            url: 'v1/file/' + r.fid,
-            method: "GET",
+            url: 'v1/url/' + r.fid,
+            method: r.method,
         })
+    }
+
+    async fetchFile(r: FetchFileRequset): Promise<FetchFileResponse> {
+        if (r.fid.startsWith("public")) {
+            return new Promise<any>((resolved, reject) => {
+                this.fetchSignURL({ fid: r.fid, method: "GET" }).then(res => {
+                    this.request({
+                        url: res.request.response,
+                        method: "GET"
+                    }).then(resolved).catch(reject)
+                }).catch(reject)
+            })
+        }
+        return Promise.reject("没有认证信息")
     }
 
     async fetchCatalog(r: FetchCatalogRequset): Promise<FetchCatalogResponse> {
@@ -67,15 +81,21 @@ export class HTTPClient {
 export const client = new HTTPClient({ baseURL: baseURL })
 
 // ----------------------- 结构体定义 --------------------------
-
+export interface FetchURLRequset {
+    fid: string
+    method: Axios.Method
+}
+export interface FetchURLResponse {
+    request: {
+        response: string
+    }
+}
 export interface FetchFileRequset {
     fid: string
 }
 export interface FetchFileResponse {
-    data: {
-        fid: string
-        name: string
-        content: string
+    request: {
+        response: string
     }
 }
 export interface FetchCatalogRequset {

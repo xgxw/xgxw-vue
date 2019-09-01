@@ -26,7 +26,6 @@ import { isMobile } from "@/util/util";
   methods: {
     ...mapActions({
       fetchContent: "article/fetchContentLocal",
-      changeContent: "article/changeContent",
       uploadContent: "article/uploadContentLocal"
     })
   }
