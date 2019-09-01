@@ -45,10 +45,10 @@ export default class Home extends Vue {
 
   mounted() {
     this.fetchContent(this.fid);
-    this.changePageDataSet(this.commandBarData);
+    this.changePageDataSet(this.pageDataSet);
   }
 
-  private commandBarData: SelectItem[] = [
+  private pageDataSet: SelectItem[] = [
     createSelectItem(createFunName("print"), "打印本页", this.print.bind(this)),
     createSelectItem(
       createFunName("editor"),

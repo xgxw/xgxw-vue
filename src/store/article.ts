@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { client } from '@/api';
 import { UnkownRequestError, instanceOfRequestError } from '@/constants/error';
 
@@ -95,7 +94,7 @@ const actions = {
       resolved()
     })
   },
-  // uploadContentLocal 初次进入时下载文件. 传入文件名称.
+  // uploadContentLocal 保存文件.
   async uploadContentLocal({ commit, state }, content: string): Promise<any> {
     commit("uploadContent", content)
     return new Promise<any>((resolved, reject) => {
