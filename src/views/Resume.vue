@@ -21,8 +21,12 @@ import {
   createFunName
 } from "@/constants/command";
 import { FetchCatalogRequset } from "@/api";
+import {
+  UnkownRequestError,
+  UnkownRequestErrorTitle
+} from "../constants/error";
 
-Component.registerHooks(["beforeRouteLeave"]);
+Component.registerHooks(["beforeRouteLeave", "beforeRouteUpdate"]);
 
 @Component({
   components: {
@@ -49,27 +53,6 @@ export default class Resume extends Vue {
   private isMobile = isMobile();
   private fid = "";
   private pageDataSet: SelectItem[] = [];
-
-  deduceData() {
-    // TODO
-    this.fetchContent(this.fid);
-  }
-  @Watch("$route", { immediate: true, deep: true })
-  handleRouteChange() {
-    let path = this.$route.path;
-    switch (path) {
-      case "/resume":
-      case "/resume/":
-      case "/resume/default.md": {
-        this.fid = "public/resume/default.md";
-        break;
-      }
-      default: {
-        this.fid = "public/" + path;
-      }
-    }
-    this.deduceData();
-  }
 
   reCreateDataSet() {
     this.pageDataSet = [];
@@ -119,9 +102,38 @@ export default class Resume extends Vue {
 
   mounted() {
     this.requestCatalog();
+    this.fid = "public" + this.$route.path;
+    this.deduceData();
   }
   beforeRouteLeave(to: any, from: any, next: any) {
     this.changePageDataSet([]);
+    next();
+  }
+  deduceData() {
+    this.fetchContent(this.fid).catch(e => {
+      switch (e) {
+        case UnkownRequestError:
+          this.$message.warning(UnkownRequestErrorTitle, 2);
+          return;
+        default:
+          this.$message.warning("未找到该简历", 2);
+      }
+    });
+  }
+  beforeRouteUpdate(to: any, from: any, next: any) {
+    let path = to.path;
+    switch (path) {
+      case "/resume":
+      case "/resume/":
+      case "/resume/default.md": {
+        this.fid = "public/resume/default.md";
+        break;
+      }
+      default: {
+        this.fid = "public/" + path;
+      }
+    }
+    this.deduceData();
     next();
   }
 
