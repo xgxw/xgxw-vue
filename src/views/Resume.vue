@@ -22,6 +22,8 @@ import {
 } from "@/constants/command";
 import { FetchCatalogRequset } from "@/api";
 
+Component.registerHooks(["beforeRouteLeave"]);
+
 @Component({
   components: {
     "paper-layout": PaperLayout,
@@ -49,7 +51,6 @@ export default class Resume extends Vue {
   private pageDataSet: SelectItem[] = [];
 
   deduceData() {
-    console.log(11111, this.fid);
     // TODO
     this.fetchContent(this.fid);
   }
@@ -118,6 +119,10 @@ export default class Resume extends Vue {
 
   mounted() {
     this.requestCatalog();
+  }
+  beforeRouteLeave(to: any, from: any, next: any) {
+    this.changePageDataSet([]);
+    next();
   }
 
   private readonly funDataSet: SelectItem[] = [

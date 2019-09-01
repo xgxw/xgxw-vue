@@ -20,6 +20,8 @@ import {
   createFunName
 } from "@/constants/command";
 
+Component.registerHooks(["beforeRouteLeave"]);
+
 @Component({
   components: {
     "paper-layout": PaperLayout,
@@ -46,6 +48,10 @@ export default class Home extends Vue {
   mounted() {
     this.fetchContent(this.fid);
     this.changePageDataSet(this.pageDataSet);
+  }
+  beforeRouteLeave(to: any, from: any, next: any) {
+    this.changePageDataSet([]);
+    next();
   }
 
   private pageDataSet: SelectItem[] = [
