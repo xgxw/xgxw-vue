@@ -14,7 +14,11 @@ import Markdown from "@/components/Markdown.vue";
 import Loading from "@/components/Loading.vue";
 import { mapGetters, mapActions } from "vuex";
 import { isMobile } from "@/util/util";
-import { SelectItem } from "@/constants/command";
+import {
+  SelectItem,
+  createSelectItem,
+  createFunName
+} from "@/constants/command";
 
 @Component({
   components: {
@@ -45,16 +49,12 @@ export default class Home extends Vue {
   }
 
   private commandBarData: SelectItem[] = [
-    {
-      name: "print",
-      desc: "打印本页",
-      cmd: this.print.bind(this)
-    },
-    {
-      name: "editor",
-      desc: "编辑本页",
-      cmd: this.editor.bind(this)
-    }
+    createSelectItem(createFunName("print"), "打印本页", this.print.bind(this)),
+    createSelectItem(
+      createFunName("editor"),
+      "编辑本页",
+      this.editor.bind(this)
+    )
   ];
   print() {
     this.$nextTick(() => {
@@ -62,7 +62,6 @@ export default class Home extends Vue {
     });
   }
   editor() {
-    console.log("editor");
     this.$router.push("fid");
   }
 }

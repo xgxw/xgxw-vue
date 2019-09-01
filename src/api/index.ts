@@ -36,7 +36,7 @@ export class HTTPClient {
 
     async fetchCatalog(r: FetchCatalogRequset): Promise<FetchCatalogResponse> {
         return this.request({
-            url: 'v1/catalog/public' + r.path + '?options=1',
+            url: 'v1/catalog/public/' + r.path + '?options=' + r.options,
             method: "GET",
         })
     }
@@ -79,7 +79,8 @@ export interface FetchFileResponse {
     }
 }
 export interface FetchCatalogRequset {
-    path: string
+    path: string,
+    options: string
 }
 export interface FetchCatalogResponse {
     data: {
