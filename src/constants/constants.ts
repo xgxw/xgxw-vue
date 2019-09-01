@@ -1,0 +1,1 @@
+export const MobileWidth = 1025;

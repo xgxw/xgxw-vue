@@ -1,0 +1,24 @@
+@import './base.scss';
+@import './mavon-editor.scss';
+
+@media all {
+  .v-note-wrapper::v-deep {
+    min-height: 100% !important;
+  }
+}
+
+// PC端界面
+@media screen and (min-width: $mobile-width) {
+  .container {
+    padding: 20px 10px;
+    height: 100vh;
+  }
+}
+
+// 移动端界面
+@media screen and (max-width: $mobile-width) {
+  .container {
+    padding: 0px;
+    height: 100vh;
+  }
+}
