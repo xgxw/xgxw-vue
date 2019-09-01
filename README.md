@@ -1,4 +1,4 @@
-# xgxw-vue-bk
+# xgxw-vue
 
 ## Project setup
 ```
