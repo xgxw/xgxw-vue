@@ -102,12 +102,25 @@ export default class Resume extends Vue {
 
   mounted() {
     this.requestCatalog();
-    this.fid = "public" + this.$route.path;
+    this.deduceFid(this.$route.path)
     this.deduceData();
   }
   beforeRouteLeave(to: any, from: any, next: any) {
     this.changePageDataSet([]);
     next();
+  }
+  deduceFid(path: string) {
+    switch (path) {
+      case "/resume":
+      case "/resume/":
+      case "/resume/default.md": {
+        this.fid = "public/resume/default.md";
+        break;
+      }
+      default: {
+        this.fid = "public/" + path;
+      }
+    }
   }
   deduceData() {
     this.fetchContent(this.fid).catch(e => {
@@ -121,18 +134,7 @@ export default class Resume extends Vue {
     });
   }
   beforeRouteUpdate(to: any, from: any, next: any) {
-    let path = to.path;
-    switch (path) {
-      case "/resume":
-      case "/resume/":
-      case "/resume/default.md": {
-        this.fid = "public/resume/default.md";
-        break;
-      }
-      default: {
-        this.fid = "public/" + path;
-      }
-    }
+    this.deduceFid(to.path);
     this.deduceData();
     next();
   }
