@@ -3,6 +3,7 @@ import Router, { RouteConfig } from 'vue-router';
 import Login from '@/views/Login.vue';
 import Home from '@/views/Home.vue';
 import Resume from '@/views/Resume.vue';
+import TempShow from '@/views/TempShow.vue';
 import { tools } from './tools/index';
 import { demos } from './demos/index';
 
@@ -46,6 +47,19 @@ const resume: RouteConfig = {
   },
 };
 
+const tempshowPath: string = '/tempshow';
+export function getTempShowPath(fid: string) {
+  return tempshowPath + fid;
+}
+const tempshow: RouteConfig = {
+  path: tempshowPath + "*",
+  name: 'tempshow',
+  component: TempShow,
+  meta: {
+    title: "Show",
+  },
+};
+
 let devs: RouteConfig[] = []
 if (process.env.NODE_ENV == "development") {
   devs = devs.concat(demos)
@@ -58,6 +72,7 @@ const router = new Router({
     index,
     login,
     resume,
+    tempshow,
     ...tools
   ],
 });

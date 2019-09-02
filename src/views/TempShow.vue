@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <paper-layout path="吴振胜的简历">
+    <paper-layout path="www.xiagaoxiawan.com">
       <loading :spinning="fetching" />
       <markdown :mkdoc="content" :isMobile="isMobile" />
     </paper-layout>
@@ -25,7 +25,7 @@ import {
   UnkownRequestError,
   UnkownRequestErrorTitle
 } from "../constants/error";
-import { getResumePath } from "../router";
+import { getTempShowPath } from '../router';
 
 Component.registerHooks(["beforeRouteLeave", "beforeRouteUpdate"]);
 
@@ -50,7 +50,7 @@ Component.registerHooks(["beforeRouteLeave", "beforeRouteUpdate"]);
     })
   }
 })
-export default class Resume extends Vue {
+export default class TempShow extends Vue {
   private isMobile = isMobile();
   private fid = "";
   private pageDataSet: SelectItem[] = [];
@@ -60,18 +60,13 @@ export default class Resume extends Vue {
     this.pageDataSet = this.pageDataSet.concat(this.funDataSet);
   }
 
-  /*
-    addCatalogDataSet 将请求结果中的所有 resumePath 添加到命令行中
-    注意, 由于后端组织路由与前端不同, resume没有按照后端 private/public 方式组织路径,
-    所以需要前端自己去更改相应的路由, 而不能沿用后端路由的方式, 即fid.
-  */
   addCatalogDataSet(): SelectItem[] {
     this.reCreateDataSet();
     let paths: string[] = [];
     if (this.catalogPaths) {
       for (let i = 0; i < this.catalogPaths.length; i++) {
         let path: string = this.catalogPaths[i];
-        if (!path.startsWith("public/") || path == "public/resume/") {
+        if (!path.startsWith("public/") || path == "public/tempshow/") {
           continue;
         }
         path = path.replace("public", "");
@@ -85,14 +80,14 @@ export default class Resume extends Vue {
   }
   requestCatalog() {
     let r: FetchCatalogRequset = {
-      path: "resume/",
+      path: "tempshow/",
       options: "1"
     };
     this.fetchCatalog(r)
       .catch(e => {
         switch (e) {
           default:
-            this.$message.warning("找不到该简历, 请检查路径", 2);
+            this.$message.warning("找不到该目录, 请检查路径", 2);
         }
       })
       .finally(() => {
@@ -112,10 +107,10 @@ export default class Resume extends Vue {
   }
   deduceFid(path: string) {
     switch (path) {
-      case getResumePath(""):
-      case getResumePath("/"):
-      case getResumePath("/default.md"): {
-        this.fid = "public/resume/default.md";
+      case getTempShowPath(""):
+      case getTempShowPath("/"):
+      case getTempShowPath("/default.md"): {
+        this.fid = "public/tempshow/default.md";
         break;
       }
       default: {
@@ -130,7 +125,7 @@ export default class Resume extends Vue {
           this.$message.warning(UnkownRequestErrorTitle, 2);
           return;
         default:
-          this.$message.warning("未找到该简历", 2);
+          this.$message.warning("未找到该文件", 2);
       }
     });
   }
