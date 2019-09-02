@@ -1,8 +1,8 @@
-module.exports = {
-    publicPath: process.env.NODE_ENV === 'production'
-        ? 'https://xgxw-cdn.oss-cn-beijing.aliyuncs.com/xgxw'
-        : '/'
-}
+// module.exports = {
+//     publicPath: process.env.NODE_ENV === 'production'
+//         ? 'https://xgxw-cdn.oss-cn-beijing.aliyuncs.com/xgxw'
+//         : '/'
+// }
 
 // module.exports = {
 //     chainWebpack: config => {
