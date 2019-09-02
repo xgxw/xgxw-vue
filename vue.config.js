@@ -1,6 +1,6 @@
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production'
-        ? 'https://xgxw.oss-cn-beijing.aliyuncs.com/public/dist'
+        ? 'https://xgxw-cdn.oss-cn-beijing.aliyuncs.com/xgxw'
         : '/'
 }
 
