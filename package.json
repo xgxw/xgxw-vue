@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve  --mode development",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "upload": "ossutil -e oss-cn-beijing.aliyuncs.com/ cp -fur dist/ oss://xgxw/public/dist"
   },
   "dependencies": {
     "ant-design-vue": "^1.3.16",
